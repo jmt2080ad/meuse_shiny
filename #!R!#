@@ -1,0 +1,2660 @@
+
+R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> > options(chmhelp=FALSE, help_type="text")
+> options(STERM='iESS', str.dendrogram.last="'", editor='emacsclient.exe', show.error.locations=TRUE)
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+
+plot(x$idw[[1]],
++     breaks = c(0,10,20,40),
++     col = terrain.colors(3),
++     main="")
+Warning message:
+package 'gstat' was built under R version 3.3.3
+> >
+>
+Warning message:
+package 'tolerance' was built under R version 3.3.3
+>
+data.table 1.10.4
+  The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way
+  Documentation: ?data.table, example(data.table) and browseVignettes("data.table")
+  Release notes, videos and slides: http://r-datatable.com
+
+Attaching package: 'data.table'
+
+The following object is masked from 'package:raster':
+
+    shift
+
+> > > > > > + + + > library(shiny)
+> ?selectInput
+> tab
+Error: object 'tab' not found
+> ## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+> > x
+   analyte          coords                           vals logTol9090
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,   10.10458
+2:  copper <SpatialPoints>             85,81,68,81,48,61,   72.51379
+3:    lead <SpatialPoints>       299,277,199,116,117,137,   317.4149
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,    1010.51
+             idw
+1: <RasterLayer>
+2: <RasterLayer>
+3: <RasterLayer>
+4: <RasterLayer>
+> ## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium", "Copper", "Lead", "Zinc"))
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastePlot <- renderPlot(plot(rast))
+}
+
+shinyApp(ui = ui, server = server)
+> + + + + Error: unexpected symbol in:
+"                c("Cadmium", "Copper", "Lead", "Zinc"))
+    plotOutput"
+> Error: unexpected ')' in "    )"
+> > + + > > Error in force(ui) : object 'ui' not found
+> ## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium", "Copper", "Lead", "Zinc"))
++    plotOutput(outputId = "rastPlot")
++    )
+> + + + + Error: unexpected symbol in:
+"                c("Cadmium", "Copper", "Lead", "Zinc"))
+    plotOutput"
+> Error: unexpected ')' in "    )"
+> x <- readRDS("./data_output/surfaces.rds")
+> ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium", "Copper", "Lead", "Zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
++ . + > server <- function(input, output){
++    output$rastePlot <- renderPlot(plot(rast))
+}
++ + > shinyApp(ui = ui, server = server)
+
+Listening on http://127.0.0.1:7005
+  C-c C-c
+
+> > x
+   analyte          coords                           vals logTol9090
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,   10.10458
+2:  copper <SpatialPoints>             85,81,68,81,48,61,   72.51379
+3:    lead <SpatialPoints>       299,277,199,116,117,137,   317.4149
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,    1010.51
+             idw
+1: <RasterLayer>
+2: <RasterLayer>
+3: <RasterLayer>
+4: <RasterLayer>
+> ?selectInput
+>                   "Copper" = "copper", "Lead" = "lead", "Zinc" = "zinc")),
+Error: unexpected ',' in "                  "Copper" = "copper","
+>                   "Lead" = "lead", "Zinc" = "zinc")),
+Error: unexpected ',' in "                  "Lead" = "lead","
+> input = "zinc"
+> x[analyte = input, idw]
+Error in `[.data.table`(x, analyte = input, idw) :
+  unused argument (analyte = input)
+> input
+[1] "zinc"
+> x[analyte == input, idw]
+[[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+
+> plot(x[analyte == input, idw])
+Error in xy.coords(x, y, xlabel, ylabel, log) :
+  'x' is a list, but does not have components 'x' and 'y'
+> plot(x[[analyte == input, idw]]
++ )
+Error in .subset2(x, ..2, exact = exact) :
+  invalid subscript type 'closure'
+> plot(x[[analyte == input, idw]])
+Error in .subset2(x, ..2, exact = exact) :
+  invalid subscript type 'closure'
+> plot(x[analyte == input, x$idw])
+Error in as.numeric(from) :
+  cannot coerce type 'S4' to vector of type 'double'
+> class(x[analyte == input, x$idw])
+[1] "data.table" "data.frame"
+> x[analyte == input, x$idw]
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> x[analyte == input,]$idw
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> x[analyte == input]$idw
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> x[analyte == input]
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> x[analyte == input,]
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> input
+[1] "zinc"
+> x
+Error in FUN(X[[i]], ...) :
+  Invalid column: it has dimensions. Can't format it. If it's the result of data.table(table()), use as.data.table(table()) instead.
+> library(shiny)
+
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+> > > > > x
+   analyte          coords                           vals logTol9090
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,   10.10458
+2:  copper <SpatialPoints>             85,81,68,81,48,61,   72.51379
+3:    lead <SpatialPoints>       299,277,199,116,117,137,   317.4149
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,    1010.51
+             idw
+1: <RasterLayer>
+2: <RasterLayer>
+3: <RasterLayer>
+4: <RasterLayer>
+> x$analyte
+[1] "cadmium" "copper"  "lead"    "zinc"
+> x[analyte == input,]
+   analyte          coords                           vals logTol9090
+1:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,    1010.51
+             idw
+1: <RasterLayer>
+> x[analyte == input,]$idw
+[[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+
+> class(x[analyte == input,]$idw)
+[1] "list"
+> x[analyte == input,]$idw[[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+> x[analyte == input,idw]
+[[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+
+> x[analyte == input,idw][[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+> x[analyte == input,idw][[1]]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 114.349, 1823.823  (min, max)
+
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == input,idw][[1]]))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > + . + > > + + > >
+Listening on http://127.0.0.1:7005
+Warning: Error in [.data.table: RHS of == is length 3 which is not 1 or nrow (4). For robustness, no recycling is allowed (other than of length 1 RHS). Consider %in% instead.
+Stack trace (innermost first):
+    105: [.data.table
+    104: [
+    103: plot
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+  C-c C-c
+>
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == SelAna,idw][[1]]))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > + . + > > + + > >
+Listening on http://127.0.0.1:7005
+Warning: Error in eval: object 'SelAna' not found
+Stack trace (innermost first):
+    107: eval
+    106: eval
+    105: [.data.table
+    104: [
+    103: plot
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+  C-c C-c
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == input$SelAna,idw][[1]]))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > + . + > > + + > >
+Listening on http://127.0.0.1:7005
+  C-c C-c
+> colRamp <- colorRampPalette(c('lightblue', 'lightgreen', 'red'))
+> colRamp
+function (n)
+{
+    x <- ramp(seq.int(0, 1, length.out = n))
+    if (ncol(x) == 4L)
+        rgb(x[, 1L], x[, 2L], x[, 3L], x[, 4L], maxColorValue = 255)
+    else rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
+}
+<bytecode: 0x000000001a0c7240>
+<environment: 0x0000000010202078>
+> colRamp(lenght(surf))
+Error in .approxfun(x, y, v, method, yleft, yright, f) :
+  could not find function "lenght"
+> surf <- x[analyte == input$SelAna,idw][[1]]
+Error in input$SelAna : $ operator is invalid for atomic vectors
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'lightgreen', 'red'))
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    surf <- x[analyte == input$SelAna,idw][[1]]
++    output$rastPlot <- renderPlot(plot(surf,
++                                       col = colRamp(length(surf))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > + . + > > + + + + > >
+Listening on http://127.0.0.1:7005
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Stack trace (innermost first):
+    53: .getReactiveEnvironment()$currentContext
+    52: .subset2(x, "impl")$get
+    51: $.reactivevalues
+    50: $
+    49: eval
+    48: eval
+    47: [.data.table
+    46: [ [#2]
+    45: server [#2]
+     4: <Anonymous>
+     3: do.call
+     2: print.shiny.appobj
+     1: <Promise>
+Error in .getReactiveEnvironment()$currentContext() :
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+colRamp(length(surf))  C-c C-c
+> debug(server)
+> shinyApp(ui = ui, server = server)
+
+Listening on http://127.0.0.1:7005
+Warning: Error in .getReactiveEnvironment()$currentContext: Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+Stack trace (innermost first):
+    53: .getReactiveEnvironment()$currentContext
+    52: .subset2(x, "impl")$get
+    51: $.reactivevalues
+    50: $
+    49: eval
+    48: eval
+    47: [.data.table
+    46: [ [#2]
+    45: server [#2]
+     4: <Anonymous>
+     3: do.call
+     2: print.shiny.appobj
+     1: <Promise>
+Error in .getReactiveEnvironment()$currentContext() :
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+  C-c C-c
+
+> > library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'lightgreen', 'red'))
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == input$SelAna,idw][[1]],
++                                       col = colRamp(length(x[analyte == input$SelAna,idw][[1]]))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > + . + > > + + + > >
+Listening on http://127.0.0.1:7005
+  C-c C-c
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == input$SelAna,idw][[1]],
++                                       col = colRamp(length(x[analyte == input$SelAna,idw][[1]]))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > + . + > > + + + > >
+Listening on http://127.0.0.1:7005
+coords <- SpatialPointsDataFrame(coords, data = data.frame(val = val))
+tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data.frame(val = val))]
+  C-c C-c
+> Error in is(coords, "SpatialPoints") : object 'coords' not found
+> Error: object 'tab' not found
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data.frame(val = val))]
+> > > > > > > > >
+> [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > Error in data.frame(val = val) : object 'val' not found
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data.frame(val = vals))]
+> > > > > > > > > > [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > Error in validObject(.Object) :
+  invalid class "SpatialPointsDataFrame" object: invalid object for slot "data" in class "SpatialPointsDataFrame": got class "numeric", should be or extend class "data.frame"
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+> > > > > > > > > > [1] "data.frame"
+> > >
+> [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > >
+> tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+> ?SpatialPointsDataFrame
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+> > > > > > > > > > [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > ?SpatialPointsDataFrame
+
+> tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+> tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data.frame(val = vals))]
+Error in validObject(.Object) :
+  invalid class "SpatialPointsDataFrame" object: invalid object for slot "data" in class "SpatialPointsDataFrame": got class "numeric", should be or extend class "data.frame"
+> tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, datat = data.frame(val = vals))]
+Error in (function (coords, data, coords.nrs = numeric(0), proj4string = CRS(as.character(NA)),  :
+  unused argument (datat = dots[[2]][[1]])
+> tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data = data.frame(val = vals))]
+Error in validObject(.Object) :
+  invalid class "SpatialPointsDataFrame" object: invalid object for slot "data" in class "SpatialPointsDataFrame": got class "numeric", should be or extend class "data.frame"
+> vals
+Error: object 'vals' not found
+>
+> data.frame(val = vals)
+Error in data.frame(val = vals) : object 'vals' not found
+> tab[,valsSp:=mapply(SpatialPointsDataFrame, coords, data.frame(val = vals))]
+Error in validObject(.Object) :
+  invalid class "SpatialPointsDataFrame" object: invalid object for slot "data" in class "SpatialPointsDataFrame": got class "numeric", should be or extend class "data.frame"
+> tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coods, data.frame(val = data)),
++         coords, val = vals)]
++ Error in (function (coords, data)  :
+  unused argument (val = dots[[2]][[1]])
+> tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coods, data.frame(val = data)),
++         coords, vals)]
++ Error in is(coords, "SpatialPoints") (from #1) : object 'coods' not found
+> tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val = data)),
++         coords, vals)]
++ > library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val = data)),
++         coords, vals)]
+> > > > > > > > > > [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > + > tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+                     valsSp
+1: <SpatialPointsDataFrame>
+2: <SpatialPointsDataFrame>
+3: <SpatialPointsDataFrame>
+4: <SpatialPointsDataFrame>
+> tab[,meuseGrid:=SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid),]
+Error in `[.data.table`(tab, , `:=`(meuseGrid, SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val=data)),
++                    coords, vals)]
+tab[,meuseGrid:=SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid),]
+> > > > > > > > > > [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > + > Error in `[.data.table`(tab, , `:=`(meuseGrid, SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+> SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)
+class       : SpatialPointsDataFrame
+features    : 3103
+extent      : 178460, 181540, 329620, 333740  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+variables   : 7
+names       :      x,      y, part.a, part.b,       dist, soil, ffreq
+min values  : 178460, 329620,      0,      0, 0.00000000,    1,     1
+max values  : 181540, 333740,      1,      1, 0.99260700,    3,     3
+> Error in `[.data.table`(tab, , `:=`(meuseGrid, SpatialPointsDataFrame(meuse.grid[c("x",  :
+Error: unexpected 'in' in "Error in"
+> SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)
+class       : SpatialPointsDataFrame
+features    : 3103
+extent      : 178460, 181540, 329620, 333740  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+variables   : 7
+names       :      x,      y, part.a, part.b,       dist, soil, ffreq
+min values  : 178460, 329620,      0,      0, 0.00000000,    1,     1
+max values  : 181540, 333740,      1,      1, 0.99260700,    3,     3
+> tab[,meuseGrid:=list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
+Error in `[.data.table`(tab, , `:=`(meuseGrid, list(SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+> list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid))
+[[1]]
+class       : SpatialPointsDataFrame
+features    : 3103
+extent      : 178460, 181540, 329620, 333740  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+variables   : 7
+names       :      x,      y, part.a, part.b,       dist, soil, ffreq
+min values  : 178460, 329620,      0,      0, 0.00000000,    1,     1
+max values  : 181540, 333740,      1,      1, 0.99260700,    3,     3
+
+> tab[,meuseGrid:=list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
+Error in `[.data.table`(tab, , `:=`(meuseGrid, list(SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+> tab[,meuseGrid:=list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
+Error in `[.data.table`(tab, , `:=`(meuseGrid, list(SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid))
+[[1]]
+class       : SpatialPointsDataFrame
+features    : 3103
+extent      : 178460, 181540, 329620, 333740  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+variables   : 7
+names       :      x,      y, part.a, part.b,       dist, soil, ffreq
+min values  : 178460, 329620,      0,      0, 0.00000000,    1,     1
+max values  : 181540, 333740,      1,      1, 0.99260700,    3,     3
+
+> tab[,meuseGrid:=list(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
+Error in `[.data.table`(tab, , `:=`(meuseGrid, list(SpatialPointsDataFrame(meuse.grid[c("x",  :
+  RHS of assignment is not NULL, not an an atomic vector (see ?is.atomic) and not a list column.
+> tab[,meuseGrid:=rep(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid), nrow(tab)),]
+Error in rep(SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid),  :
+  attempt to replicate an object of type 'S4'
+> tab[,meuseGrid:=lapply(1:nrow(tab),
++         function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid), nrow(tab)),]
++ Error in FUN(X[[i]], ...) : unused argument (4)
+> lapply(1:nrow(tab),
++                       function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid), nrow(tab))
++ Error in FUN(X[[i]], ...) : unused argument (4)
+> tab[,meuseGrid:=lapply(1:nrow(tab),
++                       function() SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid), nrow(tab)),]
++ Error in FUN(X[[i]], ...) : unused arguments (X[[i]], 4)
+> 1:nrow(tab)
+[1] 1 2 3 4
+> tab[,meuseGrid:=lapply(1:nrow(tab),
++                       function() SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
++ Error in FUN(X[[i]], ...) : unused argument (X[[i]])
+> tab[,meuseGrid:=lapply(1:nrow(tab),
++                       function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
++ > tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+                     valsSp                meuseGrid
+1: <SpatialPointsDataFrame> <SpatialPointsDataFrame>
+2: <SpatialPointsDataFrame> <SpatialPointsDataFrame>
+3: <SpatialPointsDataFrame> <SpatialPointsDataFrame>
+4: <SpatialPointsDataFrame> <SpatialPointsDataFrame>
+> library(gstat)
+library(sp)
+library(raster)
+library(tolerance)
+library(data.table)
+library(parallel)
+
+## read in meuse data
+data(meuse)
+data(meuse.grid)
+class(meuse)
+
+## convert meuse data to spatial
+meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
+class(meuse)
+
+## build table for storing results
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
++                  coords = list(as(meuse, "SpatialPoints")))
+tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val=data)), coords, vals)]
+tab[,meuseGrid:=lapply(1:nrow(tab), function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
+
+## explore meuse data
+par(mfrow = c(2,2))
+lapply(tab$vals, function(x) hist(x))
+lapply(tab$vals, function(x) plot(density(x)))
+lapply(tab$vals, function(x) hist(log(x)))
+lapply(tab$vals, function(x) plot(density(log(x))))
+
+## calculate criteria for each analyte
+tol <- function(x){
++    normtol.int(x, 0.1, 0.9, log.norm = T)$"1-sided.upper"
+}
+tab[,logTol9090:=lapply(vals, tol)]
+
+## generate IDW interpolation for metals
+idwFun <- function(valSp, meuseGrid){
++    idwOut <- idw(val~1,
++                  valSp,
++                  newdata = meuseGrid,
++                  nmax = 10,
++                  nmin = 4,
++                  omax = 0,
++                  maxdist = 1000,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = 2.0,
++                  debug.level = 1)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(idwOut)
+}
+
+tab[,idw:=mapply(idwFun, vals, coords)]
+
+saveRDS(tab, "./data_output/surfaces.rds")
+> > > > > > > > > > [1] "data.frame"
+> > > > [1] "SpatialPointsDataFrame"
+attr(,"package")
+[1] "sp"
+> > > + > > >
+> > > > [[1]]
+$breaks
+ [1]  0  2  4  6  8 10 12 14 16 18 20
+
+$counts
+ [1] 77 42  6 11 10  5  1  1  1  1
+
+$density
+ [1] 0.248387097 0.135483871 0.019354839 0.035483871 0.032258065 0.016129032
+ [7] 0.003225806 0.003225806 0.003225806 0.003225806
+
+$mids
+ [1]  1  3  5  7  9 11 13 15 17 19
+
+$xname
+[1] "x"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[2]]
+$breaks
+ [1]  10  20  30  40  50  60  70  80  90 100 110 120 130
+
+$counts
+ [1] 15 61 29 13  5  9 10  7  2  2  1  1
+
+$density
+ [1] 0.0096774194 0.0393548387 0.0187096774 0.0083870968 0.0032258065
+ [6] 0.0058064516 0.0064516129 0.0045161290 0.0012903226 0.0012903226
+[11] 0.0006451613 0.0006451613
+
+$mids
+ [1]  15  25  35  45  55  65  75  85  95 105 115 125
+
+$xname
+[1] "x"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[3]]
+$breaks
+ [1]   0  50 100 150 200 250 300 350 400 450 500 550 600 650 700
+
+$counts
+ [1] 17 53 26 17 17 12  4  1  3  3  1  0  0  1
+
+$density
+ [1] 0.0021935484 0.0068387097 0.0033548387 0.0021935484 0.0021935484
+ [6] 0.0015483871 0.0005161290 0.0001290323 0.0003870968 0.0003870968
+[11] 0.0001290323 0.0000000000 0.0000000000 0.0001290323
+
+$mids
+ [1]  25  75 125 175 225 275 325 375 425 475 525 575 625 675
+
+$xname
+[1] "x"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[4]]
+$breaks
+ [1]    0  200  400  600  800 1000 1200 1400 1600 1800 2000
+
+$counts
+ [1] 43 44 22 23  7  9  1  4  1  1
+
+$density
+ [1] 1.387097e-03 1.419355e-03 7.096774e-04 7.419355e-04 2.258065e-04
+ [6] 2.903226e-04 3.225806e-05 1.290323e-04 3.225806e-05 3.225806e-05
+
+$mids
+ [1]  100  300  500  700  900 1100 1300 1500 1700 1900
+
+$xname
+[1] "x"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+> [[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+> [[1]]
+$breaks
+ [1] -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0  1.5  2.0  2.5  3.0
+
+$counts
+ [1] 21  0 10 13 21 32 24 12 18  4
+
+$density
+ [1] 0.2709677 0.0000000 0.1290323 0.1677419 0.2709677 0.4129032 0.3096774
+ [8] 0.1548387 0.2322581 0.0516129
+
+$mids
+ [1] -1.75 -1.25 -0.75 -0.25  0.25  0.75  1.25  1.75  2.25  2.75
+
+$xname
+[1] "log(x)"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[2]]
+$breaks
+ [1] 2.6 2.8 3.0 3.2 3.4 3.6 3.8 4.0 4.2 4.4 4.6 4.8 5.0
+
+$counts
+ [1]  2 13 34 25 23 10 14  6 17  7  3  1
+
+$density
+ [1] 0.06451613 0.41935484 1.09677419 0.80645161 0.74193548 0.32258065
+ [7] 0.45161290 0.19354839 0.54838710 0.22580645 0.09677419 0.03225806
+
+$mids
+ [1] 2.7 2.9 3.1 3.3 3.5 3.7 3.9 4.1 4.3 4.5 4.7 4.9
+
+$xname
+[1] "log(x)"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[3]]
+$breaks
+[1] 3.5 4.0 4.5 5.0 5.5 6.0 6.5
+
+$counts
+[1] 22 41 32 34 18  8
+
+$density
+[1] 0.2838710 0.5290323 0.4129032 0.4387097 0.2322581 0.1032258
+
+$mids
+[1] 3.75 4.25 4.75 5.25 5.75 6.25
+
+$xname
+[1] "log(x)"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+[[4]]
+$breaks
+[1] 4.5 5.0 5.5 6.0 6.5 7.0 7.5 8.0
+
+$counts
+[1] 15 47 27 26 29 10  1
+
+$density
+[1] 0.19354839 0.60645161 0.34838710 0.33548387 0.37419355 0.12903226 0.01290323
+
+$mids
+[1] 4.75 5.25 5.75 6.25 6.75 7.25 7.75
+
+$xname
+[1] "log(x)"
+
+$equidist
+[1] TRUE
+
+attr(,"class")
+[1] "histogram"
+
+>
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+> > > + + > > > > + . + > > Error in (function (classes, fdef, mtable)  (from #2) :
+  unable to find an inherited method for function 'idw' for signature '"formula", "numeric"'
+> > > ## generate IDW interpolation for metals
+idwFun <- function(valSp, meuseGrid){
++    idwOut <- idw(val~1,
++                  valSp,
++                  newdata = meuseGrid,
++                  nmax = 10,
++                  nmin = 4,
++                  omax = 0,
++                  maxdist = 1000,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = 2.0,
++                  debug.level = 1)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(idwOut)
+}
+
+tab[,idw:=mapply(idwFun, vals, coords)]
+> + . + > > Error in (function (classes, fdef, mtable)  (from #2) :
+  unable to find an inherited method for function 'idw' for signature '"formula", "numeric"'
+> tab[,idw:=mapply(idwFun, valSp, meuseGrid)]
+Error in mapply(idwFun, valSp, meuseGrid) : object 'valSp' not found
+>
+> tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+                     valsSp                meuseGrid logTol9090
+1: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   10.10458
+2: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   72.51379
+3: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   317.4149
+4: <SpatialPointsDataFrame> <SpatialPointsDataFrame>    1010.51
+> ## generate IDW interpolation for metals
+idwFun <- function(valSp, meuseGrid){
++    idwOut <- idw(val~1,
++                  valSp,
++                  newdata = meuseGrid,
++                  nmax = 10,
++                  nmin = 4,
++                  omax = 0,
++                  maxdist = 1000,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = 2.0,
++                  debug.level = 1)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(idwOut)
+}
+
+tab[,idw:=mapply(idwFun, valsSp, meuseGrid)]
+> + . + > > [inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+> saveRDS(tab, "./data_output/surfaces.rds")
+> tab
+   analyte          coords                           vals
+1: cadmium <SpatialPoints> 11.7, 8.6, 6.5, 2.6, 2.8, 3.0,
+2:  copper <SpatialPoints>             85,81,68,81,48,61,
+3:    lead <SpatialPoints>       299,277,199,116,117,137,
+4:    zinc <SpatialPoints> 1022,1141, 640, 257, 269, 281,
+                     valsSp                meuseGrid logTol9090           idw
+1: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   10.10458 <RasterLayer>
+2: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   72.51379 <RasterLayer>
+3: <SpatialPointsDataFrame> <SpatialPointsDataFrame>   317.4149 <RasterLayer>
+4: <SpatialPointsDataFrame> <SpatialPointsDataFrame>    1010.51 <RasterLayer>
+> library(shiny)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+> > > > > ?krige
+> library(shiny)
+library(data.table)
+library(raster)
+library(geostat)
+> > > Error in library(geostat) : there is no package called 'geostat'
+> ## generate IDW interpolation for metals
+idwFun <- function(valSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = 1000,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+> + . + > ?numericInput
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    numericInput("nmin", "Minimum Points", 0),
++    numericInput("nmax", "Maximum Points", 10),
++    numericInput("maxdist", "Maximum Search Distance", 100),
++    numericInput("idp", "IDW Power", 2),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              input$nmin,
++                                              input$nmax,
++                                              input$maxdist,
++                                              input$idp)),
++                                       col = colRamp(length(x[analyte == input$SelAna,idw][[1]]))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + Error: unexpected ')' in:
+"                                              input$idp)),
+                                       col = colRamp(length(x[analyte == input$SelAna,idw][[1]]))))"
+> Error: unexpected '}' in "}"
+> >
+Listening on http://127.0.0.1:7005
+  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    numericInput("nmin", "Minimum Points", 0),
++    numericInput("nmax", "Maximum Points", 10),
++    numericInput("maxdist", "Maximum Search Distance", 100),
++    numericInput("idp", "IDW Power", 2),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              input$nmin,
++                                              input$nmax,
++                                              input$maxdist,
++                                              input$idp)))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:7005
+Warning: Error in : REAL() can only be applied to a 'numeric', not a 'integer'
+Stack trace (innermost first):
+    112: predict.gstat
+    111: predict
+    110: .local
+    109: krige
+    108: krige
+    107: .local
+    106: idw
+    105: idw
+    104: idwFun [#2]
+    103: plot
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+input <- data.frame(SelAna = "Cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+  C-c C-c
+> > input <- data.frame(SelAna = "Cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+> input
+   SelAna nmin nmax maxdist idp
+1 Cadmium    0   10     100   5
+> idwFun(x[analyte == input$SelAna,valsSp][[1]],
++       x[analyte == input$SelAna,meuseGrid][[1]],
++       input$nmin,
++       input$nmax,
++       input$maxdist,
++       input$idp)
++ . + Error in x[analyte == input$SelAna, valsSp][[1]] (from #2) :
+  subscript out of bounds
+> x[analyte == input$SelAna,valsSp]
+list()
+> input <- data.frame(SelAna = "cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+> idwFun(x[analyte == input$SelAna,valsSp][[1]],
++       x[analyte == input$SelAna,meuseGrid][[1]],
++       input$nmin,
++       input$nmax,
++       input$maxdist,
++       input$idp)
++ . + [inverse distance weighted interpolation]
+class       : RasterLayer
+dimensions  : 104, 78, 8112  (nrow, ncol, ncell)
+resolution  : 40, 40  (x, y)
+extent      : 178440, 181560, 329600, 333760  (xmin, xmax, ymin, ymax)
+coord. ref. : NA
+data source : in memory
+names       : var1.pred
+values      : 0.2, 18.1  (min, max)
+
+> plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
+                                              x[analyte == input$SelAna,meuseGrid][[1]],
+                                              input$nmin,
+                                              input$nmax,
+                                              input$maxdist,
+                                              input$idp))
++ . + [inverse distance weighted interpolation]
+> rm(list = ls())
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## input <- data.frame(SelAna = "cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+
+## idwFun(x[analyte == input$SelAna,valsSp][[1]],
+##        x[analyte == input$SelAna,meuseGrid][[1]],
+##        input$nmin,
+##        input$nmax,
+##        input$maxdist,
+##        input$idp)
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    numericInput("nmin", "Minimum Points", 0),
++    numericInput("nmax", "Maximum Points", 10),
++    numericInput("maxdist", "Maximum Search Distance", 100),
++    numericInput("idp", "IDW Power", 2),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > > > > > > > > > > + . + > > + . + > >
+Listening on http://127.0.0.1:7005
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+
+> > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## input <- data.frame(SelAna = "cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+
+## idwFun(x[analyte == input$SelAna,valsSp][[1]],
+##        x[analyte == input$SelAna,meuseGrid][[1]],
+##        input$nmin,
+##        input$nmax,
+##        input$maxdist,
+##        input$idp)
+
+## build shiny app
+ui <- fluidPage(
++    sidebayLayout(selectInput("SelAna",
++                              "Select Analyte",
++                              c("Cadmium" = "cadmium",
++                                "Copper" = "copper",
++                                "Lead" = "lead",
++                                "Zinc" = "zinc")),
++                  numericInput("nmin", "Minimum Points", 0),
++                  numericInput("nmax", "Maximum Points", 10),
++                  numericInput("maxdist", "Maximum Search Distance", 100),
++                  numericInput("idp", "IDW Power", 2)),
++    mainPanel(plotOutput(outputId = "rastPlot"))
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > > > > > > > > > > + . + Error in tag("div", list(...)) : could not find function "sidebayLayout"
+> > + . + > >
+Listening on http://127.0.0.1:7005
+[inverse distance weighted interpolation]
+  C-c C-c
+
+> > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## input <- data.frame(SelAna = "cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+
+## idwFun(x[analyte == input$SelAna,valsSp][[1]],
+##        x[analyte == input$SelAna,meuseGrid][[1]],
+##        input$nmin,
+##        input$nmax,
+##        input$maxdist,
+##        input$idp)
+
+## build shiny app
+ui <- fluidPage(
++    sidebayLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)),
++                  mainPanel(plotOutput(outputId = "rastPlot"))
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > > > > > > > > > > + . + Error in tag("div", list(...)) : could not find function "sidebayLayout"
+> > + . + > >
+Listening on http://127.0.0.1:7005
+[inverse distance weighted interpolation]
+  C-c C-c
+
+> > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## input <- data.frame(SelAna = "cadmium", nmin = 0, nmax = 10, maxdist = 100, idp = 5)
+
+## idwFun(x[analyte == input$SelAna,valsSp][[1]],
+##        x[analyte == input$SelAna,meuseGrid][[1]],
+##        input$nmin,
+##        input$nmax,
+##        input$maxdist,
+##        input$idp)
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > > > > > > > > > > + . + > > + . + > >
+Listening on http://127.0.0.1:7005
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+Warning: Error in if: missing value where TRUE/FALSE needed
+Stack trace (innermost first):
+    112: predict.gstat
+    111: predict
+    110: .local
+    109: krige
+    108: krige
+    107: .local
+    106: idw
+    105: idw
+    104: idwFun [#2]
+    103: plot
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+> length(x$meuseGrid[[1]])
+[1] 3103
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp)),
++                                       col=colRamp(length(x$meuseGrid[[1]]))
++                                       )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:7005
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+
+Process R exited abnormally with code 5 at Wed Nov  8 12:16:28 2017
+invalid neighbourhood selection: radius 600 max 7 min 8
+
+
+R version 3.3.2 (2016-10-31) -- "Sincere Pumpkin Patch"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> > options(chmhelp=FALSE, help_type="text")
+> options(STERM='iESS', str.dendrogram.last="'", editor='emacsclient.exe', show.error.locations=TRUE)
+> shinyApp(ui = ui, server = server)
+Error: could not find function "shinyApp"
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  block = numeric(0),
++                  na.action = na.pass,
++                  idp = idp,
++                  debug.level = 1)
++    return(raster(SpatialPixelsDataFrame(idwOut, idwOut@data)))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                              x[analyte == input$SelAna,meuseGrid][[1]],
++                                              as.numeric(input$nmin),
++                                              as.numeric(input$nmax),
++                                              as.numeric(input$maxdist),
++                                              as.numeric(input$idp)),
++                                       col=colRamp(length(x$meuseGrid[[1]]))
++                                       )
++                                  )
+}
+>
+data.table 1.10.4
+  The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way
+  Documentation: ?data.table, example(data.table) and browseVignettes("data.table")
+  Release notes, videos and slides: http://r-datatable.com
+> Loading required package: sp
+
+Attaching package: 'raster'
+
+The following object is masked from 'package:data.table':
+
+    shift
+
+>
+Warning message:
+package 'gstat' was built under R version 3.3.3
+> > > > > > > > + . + > > > + . + > > + . + > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(nmax < nmin){
++        return({plot(); text(1,1,"Input invalid")})
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+> > > > > > > > > > > + . + > > > + . + > server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
++ . + > shinyApp(ui = ui, server = server)
+
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+Warning: Error in xy.coords: argument "x" is missing, with no default
+Stack trace (innermost first):
+    107: xy.coords
+    106: plot.default
+    105: plot
+    104: plot
+    103: idwFun [#3]
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(nmax < nmin){
++        return(function(){plot.new(); text(1,1,"Input invalid")})
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(nmax < nmin){
++        return(dev.off())
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+Warning: Error in grDevices::recordPlot: no current device to record from
+Stack trace (innermost first):
+    92: <reactive:plotObj>
+    81: plotObj
+    80: origRenderFunc
+    79: output$rastPlot
+     4: <Anonymous>
+     3: do.call
+     2: print.shiny.appobj
+     1: <Promise>
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+library(shiny)  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(nmax < nmin){
++        return(function(){plot(c(0,1), c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n');
++                          text("Input Parameters invalid")})
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+Warning: Error in if: missing value where TRUE/FALSE needed
+Stack trace (innermost first):
+    103: idwFun [#2]
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+[inverse distance weighted interpolation]
+Q
+  C-c C-c
+> Error: object 'Q' not found
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(!nmax > nmin){
++        return(function(){plot(c(0,1), c(0,1), bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n');
++                          text("Input Parameters invalid")})
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Select Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(!nmax > nmin){
++        return(print("Input Parameters invalid"))
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(idwFun(x[analyte == input$SelAna,valsSp][[1]],
++                                         x[analyte == input$SelAna,meuseGrid][[1]],
++                                         as.numeric(input$nmin),
++                                         as.numeric(input$nmax),
++                                         as.numeric(input$maxdist),
++                                         as.numeric(input$idp)
++                                         )
++                                  )
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[1] "Input Parameters invalid"
+Warning: Error in if: missing value where TRUE/FALSE needed
+Stack trace (innermost first):
+    103: idwFun [#2]
+    102: renderPlot
+     92: <reactive:plotObj>
+     81: plotObj
+     80: origRenderFunc
+     79: output$rastPlot
+      4: <Anonymous>
+      3: do.call
+      2: print.shiny.appobj
+      1: <Promise>
+[inverse distance weighted interpolation]
+library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    if(!nmax > nmin){
++        return(print("Input Parameters invalid"))
++    }
++    else{
++        idwOut <- idw(val~1,
++                      valsSp,
++                      newdata = meuseGrid,
++                      nmin = nmin,
++                      nmax = nmax,
++                      omax = 0,
++                      maxdist = maxdist,
++                      idp = idp)
++        idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++        return(plot(idwOut, colRamp(length(idwOut))))
++    }
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 100),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot({
++        validate(
++            need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
++        )
++        idwFun(x[analyte == input$SelAna,valsSp][[1]],
++               x[analyte == input$SelAna,meuseGrid][[1]],
++               as.numeric(input$nmin),
++               as.numeric(input$nmax),
++               as.numeric(input$maxdist),
++               as.numeric(input$idp)
++               )
++    })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+  C-c C-c
+> > > > > > > > > > > > + . + > > > + . +
+> > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+> > > > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  idp = idp)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(plot(idwOut, colRamp(length(idwOut))))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 500),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot({
++        validate(
++            need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
++        )
++        idwFun(x[analyte == input$SelAna,valsSp][[1]],
++               x[analyte == input$SelAna,meuseGrid][[1]],
++               as.numeric(input$nmin),
++               as.numeric(input$nmax),
++               as.numeric(input$maxdist),
++               as.numeric(input$idp)
++               )
++    })
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+> library(shiny)
+library(raster)
+library(data.table)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## build shiny app
+ui <- fluidPage(
++    selectInput("SelAna",
++                "Select Analyte",
++                c("Cadmium" = "cadmium",
++                  "Copper" = "copper",
++                  "Lead" = "lead",
++                  "Zinc" = "zinc")),
++    plotOutput(outputId = "rastPlot")
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot(plot(x[analyte == input$SelAna,idw][[1]],
++                                       col = colRamp(length(x[analyte == input$SelAna,idw][[1]]))))
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > + . + > > + + + > >
+Listening on http://127.0.0.1:3591
+  C-c C-c
+> library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  idp = idp)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(plot(idwOut, colRamp(length(idwOut))))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 500),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot({
++        validate(
++            need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
++        )
++        idwFun(x[analyte == input$SelAna,valsSp][[1]],
++               x[analyte == input$SelAna,meuseGrid][[1]],
++               as.numeric(input$nmin),
++               as.numeric(input$nmax),
++               as.numeric(input$maxdist),
++               as.numeric(input$idp)
++               )
++    })
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  idp = idp)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(plot(idwOut, col = colRamp(length(idwOut))))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 500),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot({
++        validate(
++            need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
++        )
++        idwFun(x[analyte == input$SelAna,valsSp][[1]],
++               x[analyte == input$SelAna,meuseGrid][[1]],
++               as.numeric(input$nmin),
++               as.numeric(input$nmax),
++               as.numeric(input$maxdist),
++               as.numeric(input$idp)
++               )
++    })
+}
+
+shinyApp(ui = ui, server = server)
+  C-c C-c
+> > > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+  C-c C-c
+
+> > library(shiny)
+library(data.table)
+library(raster)
+library(gstat)
+library(sp)
+
+## read in processed meuse data
+x <- readRDS("./data_output/surfaces.rds")
+colRamp <- colorRampPalette(c('lightblue', 'sandybrown', 'red'))
+
+## generate IDW interpolation for metals
+idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
++    idwOut <- idw(val~1,
++                  valsSp,
++                  newdata = meuseGrid,
++                  nmin = nmin,
++                  nmax = nmax,
++                  omax = 0,
++                  maxdist = maxdist,
++                  idp = idp)
++    idwOut <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
++    return(plot(idwOut, col = colRamp(length(idwOut))))
+}
+
+## build shiny app
+ui <- fluidPage(
++    sidebarLayout(sidebarPanel(selectInput("SelAna",
++                                           "Analyte",
++                                           c("Cadmium" = "cadmium",
++                                             "Copper" = "copper",
++                                             "Lead" = "lead",
++                                             "Zinc" = "zinc")),
++                               numericInput("nmin", "Minimum Points", 0),
++                               numericInput("nmax", "Maximum Points", 10),
++                               numericInput("maxdist", "Maximum Search Distance", 500),
++                               numericInput("idp", "IDW Power", 2)
++                               ),
++                  mainPanel(plotOutput(outputId = "rastPlot")
++                            )
++                  )
++    )
+
+server <- function(input, output){
++    output$rastPlot <- renderPlot({
++        validate(
++            need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
++        )
++        idwFun(x[analyte == input$SelAna,valsSp][[1]],
++               x[analyte == input$SelAna,meuseGrid][[1]],
++               as.numeric(input$nmin),
++               as.numeric(input$nmax),
++               as.numeric(input$maxdist),
++               as.numeric(input$idp)
++               )
++    })
+}
+
+shinyApp(ui = ui, server = server)
+> > > > > > > > > > > + . + > > > + . + > > + . + > >
+Listening on http://127.0.0.1:3591
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+  C-c C-c
+>
