@@ -18,6 +18,8 @@ class(meuse)
 tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
                   coords = list(as(meuse, "SpatialPoints")))
 tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
+tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val=data)), coords, vals)]
+tab[,meuseGrid:=lapply(1:nrow(tab), function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
 
 ## explore meuse data
 par(mfrow = c(2,2))
@@ -33,11 +35,10 @@ tol <- function(x){
 tab[,logTol9090:=lapply(vals, tol)]
 
 ## generate IDW interpolation for metals
-idwFun <- function(val, coords){
-    coords <- SpatialPointsDataFrame(coords, data = data.frame(val = val))
+idwFun <- function(valSp, meuseGrid){
     idwOut <- idw(val~1,
-                  coords,
-                  newdata = SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid),
+                  valSp,
+                  newdata = meuseGrid,
                   nmax = 10,
                   nmin = 4,
                   omax = 0,
@@ -50,6 +51,6 @@ idwFun <- function(val, coords){
     return(idwOut)
 }
 
-tab[,idw:=mapply(idwFun, vals, coords)]
+tab[,idw:=mapply(idwFun, valsSp, meuseGrid)]
 
 saveRDS(tab, "./data_output/surfaces.rds")

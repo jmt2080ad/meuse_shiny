@@ -1,4 +1,7 @@
 library(shiny)
+library(raster)
+library(data.table)
+library(sp)
 
 ## read in processed meuse data
 x <- readRDS("./data_output/surfaces.rds")
@@ -21,9 +24,4 @@ server <- function(input, output){
 }
 
 shinyApp(ui = ui, server = server)
-
-## plot(x$idw[[1]],
-##      breaks = c(0,10,20,40),
-##      col = terrain.colors(3),
-##      main="")
 
