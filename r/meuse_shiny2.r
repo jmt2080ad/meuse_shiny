@@ -6,7 +6,7 @@ library(sp)
 
 ## read in processed meuse data
 x <- readRDS("./data_output/surfaces.rds")
-colRamp <- colorRampPalette(c('lightblue', 'sandybrown', 'red'))
+colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
 ## generate IDW interpolation for metals
 idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
