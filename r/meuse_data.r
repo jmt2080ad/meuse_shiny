@@ -15,24 +15,22 @@ meuse <- SpatialPointsDataFrame(meuse[c("x", "y")], data = meuse)
 class(meuse)
 
 ## build table for storing results
-tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"),
-                  coords = list(as(meuse, "SpatialPoints")))
-tab[,vals:=lapply(analyte, function(x) meuse[[x]])]
-tab[,valsSp:=mapply(function(coords, data) SpatialPointsDataFrame(coords, data.frame(val=data)), coords, vals)]
+tab <- data.table(analyte = c("cadmium", "copper", "lead", "zinc"))
+tab[,valsSp:=lapply(analyte, function(x){x <- meuse[x]; names(x) <- "val"; return(x)})]
 tab[,meuseGrid:=lapply(1:nrow(tab), function(x) SpatialPointsDataFrame(meuse.grid[c("x", "y")], data = meuse.grid)),]
 
 ## explore meuse data
 par(mfrow = c(2,2))
-lapply(tab$vals, function(x) hist(x))
-lapply(tab$vals, function(x) plot(density(x)))
-lapply(tab$vals, function(x) hist(log(x)))
-lapply(tab$vals, function(x) plot(density(log(x))))
+lapply(tab$valsSp, function(x) hist(x$val))
+lapply(tab$valsSp, function(x) plot(density(x$val)))
+lapply(tab$valsSp, function(x) hist(log(x$val)))
+lapply(tab$valsSp, function(x) plot(density(log(x$val))))
 
 ## calculate criteria for each analyte
 tol <- function(x){
-    normtol.int(x, 0.1, 0.9, log.norm = T)$"1-sided.upper"
+    normtol.int(x$val, 0.1, 0.9, log.norm = T)$"1-sided.upper"
 }
-tab[,logTol9090:=lapply(vals, tol)]
+tab[,logTol9090:=lapply(tab$valsSp, tol)]
 
 ## generate IDW interpolation for metals
 idwFun <- function(valSp, meuseGrid){
@@ -52,5 +50,4 @@ idwFun <- function(valSp, meuseGrid){
 }
 
 tab[,idw:=mapply(idwFun, valsSp, meuseGrid)]
-
 saveRDS(tab, "./data_output/surfaces.rds")

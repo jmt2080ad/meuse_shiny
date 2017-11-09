@@ -5,7 +5,7 @@ library(sp)
 
 ## read in processed meuse data
 x <- readRDS("./data_output/surfaces.rds")
-colRamp <- colorRampPalette(c('lightblue', 'springgreen3', 'red'))
+colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
 ## build shiny app
 ui <- fluidPage(
