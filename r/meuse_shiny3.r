@@ -18,7 +18,7 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                   maxdist = maxdist,
                   idp = idp)
     idwOut    <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
-    idwOut.cv <- krige.cv(val~1,
+    idwOut.cv <- krige.cv(log(val)~1,
                           valsSp,
                           nmin = nmin,
                           nmax = nmax,
@@ -26,7 +26,7 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                           nfold = 10,
                           set = list(idp = idp))@data
     idwOut.cv <- data.table(idwOut.cv)
-    idwRMSE   <- round(sqrt(idwOut.cv[,mean(residual^2),by=fold][,mean(V1),]), 2)
+    idwRMSE   <- round(sqrt(idwOut.cv[,mean(na.omit(residual)^2),by=fold][,mean(V1),]), 2)
     return(eval({plot(idwOut,
                       col = colRamp(length(idwOut)),
                       main = "IDW Interpolation");
@@ -64,7 +64,16 @@ server <- function(input, output){
     output$rastPlot <- renderPlot({
         validate(
             need(input$nmin < input$nmax, "Minimum number must be less than maximum number")
-        );
+            )
+        validate(
+            need(input$nmin >= 0, "Minimum and maximum number of points must be greater than 0.")
+            )
+        validate(
+            need(input$idp > 0, "IDW power must be greater than 0")
+            )
+        validate(
+            need(input$maxdist > 0, "Search distance must be greater than 0")
+            )
         idwFun(x[analyte == input$SelAna,valsSp][[1]],
                x[analyte == input$SelAna,meuseGrid][[1]],
                as.numeric(input$nmin),
