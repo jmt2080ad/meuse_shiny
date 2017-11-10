@@ -3,6 +3,7 @@ library(data.table)
 library(raster)
 library(gstat)
 library(sp)
+library(ggplot2)
 
 ## read in processed meuse data
 x <- readRDS("./data_output/surfaces.rds")
@@ -17,22 +18,34 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                   nmax = nmax,
                   maxdist = maxdist,
                   idp = idp)
-    idwOut    <- raster(SpatialPixelsDataFrame(idwOut, idwOut@data))
-    idwOut.cv <- krige.cv(log(val)~1,
-                          valsSp,
-                          nmin = nmin,
-                          nmax = nmax,
-                          maxdist = maxdist,
-                          nfold = 10,
-                          set = list(idp = idp))@data
-    idwOut.cv <- data.table(idwOut.cv)
+    idwOut$X <- idwOut@coords[,1]
+    idwOut$Y <- idwOut@coords[,2]
+    idwOut <- data.table(idwOut@data)
+    idwOut.cv <- data.table(
+        krige.cv(log(val)~1,
+                 valsSp,
+                 nmin = nmin,
+                 nmax = nmax,
+                 maxdist = maxdist,
+                 nfold = 10,
+                 set = list(idp = idp))@data
+        )
     idwRMSE   <- round(sqrt(idwOut.cv[,mean(na.omit(residual)^2),by=fold][,mean(V1),]), 2)
-    return(eval({plot(idwOut,
-                      col = colRamp(length(idwOut)),
-                      main = "IDW Interpolation");
-                 legend("topleft", paste("RMSE (5 fold):", idwRMSE), bty = "n", cex = 1.5)}))
+    return(
+        eval({
+            ggplot(data = idwOut, aes(x = X, y = Y)) +
+                geom_raster(aes(fill = var1.pred)) +
+                    ## geom_point(data = valsSp, aes(x = valsSp@coords[,1], y = valsSp@coords[,2])) +
+                        scale_fill_gradient("Concentration\n(mg/kg)", low = "lightskyblue2", high = "red") +
+                            xlab("") +
+                                ylab("") +
+                    theme_bw()
+
+    }))
 }
 
+valsSp = x$valsSp[[1]]
+meuseGrid = x$meuseGrid[[1]]
 nmin = 0
 nmax = 10
 maxdist = 500
