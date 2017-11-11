@@ -11,6 +11,7 @@ colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
 ## generate IDW interpolation for metals
 idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
+    set.seed(1)
     idwOut <- idw(val~1,
                   valsSp,
                   newdata = meuseGrid,
@@ -27,21 +28,21 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                  nmin = nmin,
                  nmax = nmax,
                  maxdist = maxdist,
-                 nfold = 10,
                  set = list(idp = idp))@data
         )
-    idwRMSE   <- round(sqrt(idwOut.cv[,mean(na.omit(residual)^2),by=fold][,mean(V1),]), 2)
+    idwRMSE  <- round(sqrt(idwOut.cv[,mean(na.omit(residual)^2),by=fold][,mean(V1),]), 5)
+    mycols   <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
     return(
-        eval({
-            ggplot(data = idwOut, aes(x = X, y = Y)) +
-                geom_raster(aes(fill = var1.pred)) +
-                    ## geom_point(data = valsSp, aes(x = valsSp@coords[,1], y = valsSp@coords[,2])) +
-                        scale_fill_gradient("Concentration\n(mg/kg)", low = "lightskyblue2", high = "red") +
-                            xlab("") +
-                                ylab("") +
-                    theme_bw()
-
-    }))
+        ggplot(data = idwOut, aes(x = X, y = Y)) +
+        geom_raster(aes(fill = var1.pred)) +
+        scale_fill_gradientn(colors = mycols(10)) +
+        xlab("") +
+        ylab("") +
+        theme_bw() +
+        coord_fixed() +
+        labs(title = paste("RMSE =", idwRMSE),
+             fill = "Concentration\n(mg/kg)")
+        )
 }
 
 valsSp = x$valsSp[[1]]
