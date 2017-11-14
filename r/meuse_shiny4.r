@@ -9,9 +9,8 @@ library(ggplot2)
 x <- readRDS("./data_output/surfaces.rds")
 colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
-## generate IDW interpolation for metals, calculate RMSE, plot results
+## generate IDW interpolation for metals, calculate MAE, plot results
 idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
-    set.seed(1)
     idwOut <- idw(val~1,
                   valsSp,
                   newdata = meuseGrid,
@@ -30,8 +29,8 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                  maxdist = maxdist,
                  set = list(idp = idp))@data
         )
-    idwRMSE  <- round(sqrt(idwOut.cv[,mean(na.omit(log(abs(residual)))^2),by=fold][,mean(V1),]), 5)
-    mycols   <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
+    idwMAE <- round(idwOut.cv[,mean(abs(residual)),], 3)
+    mycols <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
     return(
         ggplot(data = idwOut, aes(x = X, y = Y)) +
         geom_raster(aes(fill = var1.pred)) +
@@ -40,14 +39,14 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
         ylab("") +
         theme_bw() +
         coord_fixed() +
-        labs(title = paste("RMSE =", idwRMSE),
+            labs(title = paste("MAE =", idwMAE),
              fill = "Concentration\n(mg/kg)")
         )
 }
 
 ## build shiny app
 ui <- fluidPage(
-    titlePanel("Meuse IDW with RMSE"),
+    titlePanel("Meuse IDW with MAE (Mean Abolute Error)"),
     sidebarLayout(
         sidebarPanel(
             selectInput("SelAna",
