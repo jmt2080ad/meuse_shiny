@@ -9,7 +9,7 @@ library(ggplot2)
 x <- readRDS("./data_output/surfaces.rds")
 colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
-## generate IDW interpolation for metals
+## generate IDW interpolation for metals, calculate RMSE, plot results
 idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
     set.seed(1)
     idwOut <- idw(val~1,
@@ -23,14 +23,14 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
     idwOut$Y <- idwOut@coords[,2]
     idwOut <- data.table(idwOut@data)
     idwOut.cv <- data.table(
-        krige.cv(log(val)~1,
+        krige.cv(val~1,
                  valsSp,
                  nmin = nmin,
                  nmax = nmax,
                  maxdist = maxdist,
                  set = list(idp = idp))@data
         )
-    idwRMSE  <- round(sqrt(idwOut.cv[,mean(na.omit(residual)^2),by=fold][,mean(V1),]), 5)
+    idwRMSE  <- round(sqrt(idwOut.cv[,mean(na.omit(log(abs(residual)))^2),by=fold][,mean(V1),]), 5)
     mycols   <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
     return(
         ggplot(data = idwOut, aes(x = X, y = Y)) +
@@ -44,13 +44,6 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
              fill = "Concentration\n(mg/kg)")
         )
 }
-
-valsSp = x$valsSp[[1]]
-meuseGrid = x$meuseGrid[[1]]
-nmin = 0
-nmax = 10
-maxdist = 500
-idp = 1
 
 ## build shiny app
 ui <- fluidPage(
