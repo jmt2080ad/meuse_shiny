@@ -6,7 +6,6 @@ library(ggplot2)
 
 ## read in processed meuse data
 x <- readRDS("./data_output/surfaces.rds")
-colRamp <- colorRampPalette(c('lightblue', 'yellow3', 'sandybrown', 'red'))
 
 ## generate IDW interpolation for metals, calculate MAE, plot results
 idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
@@ -20,14 +19,12 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
     idwOut$X <- idwOut@coords[,1]
     idwOut$Y <- idwOut@coords[,2]
     idwOut <- data.table(idwOut@data)
-    idwOut.cv <- data.table(
-        krige.cv(val~1,
-                 valsSp,
-                 nmin = nmin,
-                 nmax = nmax,
-                 maxdist = maxdist,
-                 set = list(idp = idp))@data
-        )
+    idwOut.cv <- data.table(krige.cv(val~1,
+                                     valsSp,
+                                     nmin = nmin,
+                                     nmax = nmax,
+                                     maxdist = maxdist,
+                                     set = list(idp = idp))@data)
     idwMAE <- round(idwOut.cv[,mean(abs(residual)),], 3)
     mycols <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
     return(
@@ -40,7 +37,7 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
         coord_fixed() +
         labs(title = paste("MAE =", idwMAE),
              fill = "Concentration\n(mg/kg)")
-        )
+    )
 }
 
 ## build shiny app
