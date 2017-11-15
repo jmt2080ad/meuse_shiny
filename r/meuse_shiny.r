@@ -39,8 +39,8 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
         ylab("") +
         theme_bw() +
         coord_fixed() +
-            labs(title = paste("MAE =", idwMAE),
-                 fill = "Concentration\n(mg/kg)")
+        labs(title = paste("MAE =", idwMAE),
+             fill = "Concentration\n(mg/kg)")
         )
 }
 
