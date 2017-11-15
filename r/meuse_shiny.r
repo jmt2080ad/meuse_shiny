@@ -1,6 +1,5 @@
 library(shiny)
 library(data.table)
-library(raster)
 library(gstat)
 library(sp)
 library(ggplot2)
