@@ -1,0 +1,10 @@
+name: meuse_shiny
+title:
+username:
+account: jmt2080ad
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 235923
+bundleId: 1077363
+url: https://jmt2080ad.shinyapps.io/meuse_shiny/
+when: 1510776097.60752
