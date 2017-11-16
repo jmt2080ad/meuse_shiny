@@ -18,25 +18,31 @@ idwFun <- function(valsSp, meuseGrid, nmin, nmax, maxdist, idp){
                   idp = idp)
     idwOut$X <- idwOut@coords[,1]
     idwOut$Y <- idwOut@coords[,2]
-    idwOut <- data.table(idwOut@data)
+    idwOut   <- data.table(idwOut@data)
     idwOut.cv <- data.table(krige.cv(val~1,
                                      valsSp,
                                      nmin = nmin,
                                      nmax = nmax,
                                      maxdist = maxdist,
                                      set = list(idp = idp))@data)
-    idwMAE <- round(idwOut.cv[,mean(abs(residual)),], 3)
-    mycols <- colorRampPalette(c("skyblue2", "palegoldenrod", "palegreen3", "red"))
+    idwMAE  <- round(idwOut.cv[,mean(abs(residual)),], 3)
+    idwSWAC <- round(mean(idwOut$var1.pred), 3)
+    valsSp$X <- valsSp@coords[,1]
+    valsSp$Y <- valsSp@coords[,2]
+    vals   <- data.table(valsSp@data) 
+    mycols <- colorRampPalette(c("skyblue2", "palegoldenrod", "orange", "red"))
     return(
         ggplot(data = idwOut, aes(x = X, y = Y)) +
         geom_raster(aes(fill = var1.pred)) +
         scale_fill_gradientn(colors = mycols(10)) +
-        xlab("") +
-        ylab("") +
+        geom_point(data = vals, aes(x = X, y = Y), size = 0.5) + 
         theme_bw() +
         coord_fixed() +
-        labs(title = paste("MAE =", idwMAE),
-             fill = "Concentration\n(mg/kg)")
+        xlab("") +
+        ylab("") +
+        labs(title = paste0("MAE = ", idwMAE, "\nSWAC = ", idwSWAC),
+             fill = "Concentration\n(mg/kg)",
+             caption = "MAE = mean absolute error; SWAC = surface weighted average concentration")
     )
 }
 
