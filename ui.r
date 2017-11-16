@@ -3,7 +3,7 @@ library(ggplot2)
 
 ## build shiny app
 ui <- fluidPage(
-    titlePanel("Meuse IDW with MAE (Mean Abolute Error)"),
+    titlePanel("Meuse IDW with MAE (Mean Absolute Error)"),
     sidebarLayout(
         sidebarPanel(
             selectInput("SelAna",
